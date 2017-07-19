@@ -1,0 +1,120 @@
+<!DOCTYPE HTML>
+
+<html>
+
+  <head>
+    <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style>
+      	.day-streak {
+	  background-color: yellow;
+	  width: 20px;
+	  border: 1px solid black;
+	  height: 20px;
+	  display: inline-block;
+	}
+
+	.complete {
+	  
+	}
+
+	.incomplete {
+	  
+	}
+    </style>
+  </head>
+
+  <body>
+
+
+	<h1>Writing app</h1>
+
+	<div class="container">
+	  
+	  <div class="row week-streak">
+	  </div>
+	    
+	  <div class="row">
+	    <textarea name="entry" class="entry-text" cols="30" rows="10">Lorem Ipsum.
+	    </textarea>
+	  </div>
+	  
+	  <div class="row">
+	    <span class="word-count"></span>
+	    <span class="messages"></span>
+	  </div>
+
+	</div>
+
+    <script>
+	$(function(){
+	  var autosaveIntervalSeconds = 10;
+	  var storagePrefix = "rc_sp1_writingapp_";
+
+	  function getFormattedDate() {
+	    var today = new Date();
+			var dd = today.getDate();
+			var mm = today.getMonth() + 1; //January is 0!
+			var yyyy = today.getFullYear();
+	    dd = (dd < 10) ? ('0' + dd) : dd;
+	    mm = (mm < 10) ? ('0' + mm) : mm;
+			return dd + '_' + mm + '_' + yyyy;
+	  }
+	 
+	 var saveToLocalStorage = function(key, value){
+	 	localStorage.setItem(storagePrefix + key, value);
+	 }
+	 var retrieveFromLocalStorage = function(key) {
+	 	return localStorage.getItem(storagePrefix + key);
+	 }
+
+	  var saveEntry = function(){
+	  	var date = getFormattedDate();
+	    var entry = $('.entry-text').val();
+	    saveToLocalStorage(date, entry);
+	    $(".messages").html("Your entry has been saved").show().delay(1000).fadeOut("slow");
+	    console.log(localStorage.getItem(date)); // check it's there
+	  }
+	  
+	  setInterval(saveEntry, autosaveIntervalSeconds * 1000);
+	  
+
+		var updateWeekStreakWidget = function(data) {
+	    // map -> array of html elements
+	    var elements = data.map(function(complete) {
+	    	if (complete) {
+	      return '<span class="day-streak complete">X</span>'
+	      } else {
+	      return '<span class="day-streak incomplete">_</span>'
+	      }
+	    })
+	// clear and append array
+	  	$('.week-streak').html('').append(elements);
+	  }
+	  
+	  function countwords(text) {
+	  	var words = text.split(/\s/).filter(function(word){
+	    	return word.length;
+	    })
+	  	return words.length;
+	  }
+	  
+	  var updateWordCountWidget = function(){
+	  	var text = $('.entry-text').val();
+	    var count = countwords(text);
+	    $('.word-count').text(count + " words");
+	  }
+	  $('.entry-text').on('keyup', updateWordCountWidget);  
+	  
+	  var currentEntry = retrieveFromLocalStorage(getFormattedDate()));
+	  $('.entry-text').val(currentEntry);
+	  console.log('currentEntry', currentEntry);
+	   updateWeekStreakWidget([true, true, true, false, false, false, false]);
+	  updateWordCountWidget();
+	});
+
+    </script>
+
+   </body>
+</html>
+
