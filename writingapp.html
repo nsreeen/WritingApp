@@ -15,11 +15,11 @@
 	}
 
 	.complete {
-	  
+
 	}
 
 	.incomplete {
-	  
+
 	}
     </style>
   </head>
@@ -27,18 +27,19 @@
   <body>
 
 
+
 	<h1>Writing app</h1>
 
 	<div class="container">
-	  
+
 	  <div class="row week-streak">
 	  </div>
-	    
+
 	  <div class="row">
 	    <textarea name="entry" class="entry-text" cols="30" rows="10">Lorem Ipsum.
 	    </textarea>
 	  </div>
-	  
+
 	  <div class="row">
 	    <span class="word-count"></span>
 	    <span class="messages"></span>
@@ -60,7 +61,7 @@
 	    mm = (mm < 10) ? ('0' + mm) : mm;
 			return dd + '_' + mm + '_' + yyyy;
 	  }
-	 
+
 	 var saveToLocalStorage = function(key, value){
 	 	localStorage.setItem(storagePrefix + key, value);
 	 }
@@ -75,9 +76,9 @@
 	    $(".messages").html("Your entry has been saved").show().delay(1000).fadeOut("slow");
 	    console.log(localStorage.getItem(date)); // check it's there
 	  }
-	  
+
 	  setInterval(saveEntry, autosaveIntervalSeconds * 1000);
-	  
+
 
 		var updateWeekStreakWidget = function(data) {
 	    // map -> array of html elements
@@ -91,22 +92,22 @@
 	// clear and append array
 	  	$('.week-streak').html('').append(elements);
 	  }
-	  
+
 	  function countwords(text) {
 	  	var words = text.split(/\s/).filter(function(word){
 	    	return word.length;
 	    })
 	  	return words.length;
 	  }
-	  
+
 	  var updateWordCountWidget = function(){
 	  	var text = $('.entry-text').val();
 	    var count = countwords(text);
 	    $('.word-count').text(count + " words");
 	  }
-	  $('.entry-text').on('keyup', updateWordCountWidget);  
-	  
-	  var currentEntry = retrieveFromLocalStorage(getFormattedDate()));
+	  $('.entry-text').on('keyup', updateWordCountWidget);
+
+	  var currentEntry = retrieveFromLocalStorage(getFormattedDate());
 	  $('.entry-text').val(currentEntry);
 	  console.log('currentEntry', currentEntry);
 	   updateWeekStreakWidget([true, true, true, false, false, false, false]);
@@ -117,4 +118,3 @@
 
    </body>
 </html>
-
