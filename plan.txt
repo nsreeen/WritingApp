@@ -1,0 +1,32 @@
+Writing App
+===========
+
+JSFiddle: https://jsfiddle.net/eliasdorneles/spxqy8dL/6/#&togetherjs=3vfHVBhweq
+
+TODO:
+[X] fix word count to ignore spaces
+[X] save automatically the text being written
+[o] update the week streak widget as per the previously stored texts
+    [X]  get list of formatted dates for the week
+    [ ]  load from local storage the dates in the list
+[ ] add some styling for better UI
+[X] move out of jsfiddle and put code on github repo
+[X] deploy it somewhere (maybe github pages? heroku, if needs backend)
+[ ] test writing in a mobile phone
+
+What is the minimum version of our app?
+
+Use cases:
+
+[X] user writes entry of the day
+[ ] user see a streak of entries for the current week
+[ ] user access any previous entry
+
+[X] We count an entry as "filled" if it has more than 100 words.
+
+
+https://developer.mozilla.org/en/docs/Web/API/Window/localStorage
+https://www.smashingmagazine.com/2010/10/local-storage-and-how-to-use-it/ <--
+
+Extras:
+    amount of words written in real time
