@@ -12,7 +12,7 @@ TODO:
 [ ] add some styling for better UI
 [X] move out of jsfiddle and put code on github repo
 [X] deploy it somewhere (maybe github pages? heroku, if needs backend)
-[ ] test writing in a mobile phone
+[X] test writing in a mobile phone
 
 What is the minimum version of our app?
 

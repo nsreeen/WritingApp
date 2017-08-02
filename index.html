@@ -53,6 +53,18 @@
 	  var autosaveIntervalSeconds = 10;
 	  var storagePrefix = "rc_sp1_writingapp_";
 
+	// find all the week dates for current week
+	// check which ones have data in local storage
+	  function getDatesFromCurrentWeek() {
+		  var dt = new Date();
+		  var ret = [new Date(dt)];
+		  while (dt.getDay() != 0) {
+			  dt.setDate(dt.getDate() - 1);
+			  ret.push(new Date(dt));
+		  }
+		  return ret;
+	  }
+	  console.log('getDatesFromCurrentWeek', getDatesFromCurrentWeek());
 	  function getFormattedDate() {
 	    var today = new Date();
 			var dd = today.getDate();
@@ -70,9 +82,9 @@
 	 	return localStorage.getItem(storagePrefix + key);
 	 }
 
-	  var saveEntry = function(){
-	  	var date = getFormattedDate();
-	    var entry = $('.entry-text').val();
+	 var saveEntry = function(){
+		 var date = getFormattedDate();
+		var entry = $('.entry-text').val();
 	    saveToLocalStorage(date, entry);
 	    $(".messages").html("Your entry has been saved").show().delay(1000).fadeOut("slow");
 	    console.log(localStorage.getItem(date)); // check it's there
