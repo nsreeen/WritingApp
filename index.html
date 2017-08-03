@@ -53,40 +53,20 @@
 	  var autosaveIntervalSeconds = 10;
 	  var storagePrefix = "rc_sp1_writingapp_";
 
-	// find all the week dates for current week
-	// check which ones have data in local storage
-	  function getDatesFromCurrentWeek() {
-		  var dt = new Date();
-		  var ret = [new Date(dt)];
-		  while (dt.getDay() != 0) {
-			  dt.setDate(dt.getDate() - 1);
-			  ret.push(new Date(dt));
-		  }
-		  return ret;
-	  }
-	  console.log('getDatesFromCurrentWeek', getDatesFromCurrentWeek());
-	  function getFormattedDate() {
-	    var today = new Date();
-			var dd = today.getDate();
-			var mm = today.getMonth() + 1; //January is 0!
-			var yyyy = today.getFullYear();
-	    dd = (dd < 10) ? ('0' + dd) : dd;
-	    mm = (mm < 10) ? ('0' + mm) : mm;
-			return dd + '_' + mm + '_' + yyyy;
-	  }
-
 	 var saveToLocalStorage = function(key, value){
 	 	localStorage.setItem(storagePrefix + key, value);
 	 }
+
 	 var retrieveFromLocalStorage = function(key) {
 	 	return localStorage.getItem(storagePrefix + key);
 	 }
 
 	 var saveEntry = function(){
-		 var date = getFormattedDate();
-		var entry = $('.entry-text').val();
+	    var date = getFormattedDate(new Date());
+	    var entry = $('.entry-text').val();
 	    saveToLocalStorage(date, entry);
 	    $(".messages").html("Your entry has been saved").show().delay(1000).fadeOut("slow");
+      console.log('entry saved');
 	    console.log(localStorage.getItem(date)); // check it's there
 	  }
 
@@ -102,7 +82,7 @@
 	      return '<span class="day-streak incomplete">_</span>'
 	      }
 	    })
-	// clear and append array
+	     // clear and append array
 	  	$('.week-streak').html('').append(elements);
 	  }
 
@@ -120,12 +100,62 @@
 	  }
 	  $('.entry-text').on('keyup', updateWordCountWidget);
 
-	  var currentEntry = retrieveFromLocalStorage(getFormattedDate());
-	  $('.entry-text').val(currentEntry);
-	  console.log('currentEntry', currentEntry);
-	   updateWeekStreakWidget([true, true, true, false, false, false, false]);
-	  updateWordCountWidget();
+
+
+    function getFormattedDate(date_object) {
+      var dd = date_object.getDate();
+      var mm = date_object.getMonth() + 1; //January is 0!
+      var yyyy = date_object.getFullYear();
+      dd = (dd < 10) ? ('0' + dd) : dd;
+      mm = (mm < 10) ? ('0' + mm) : mm;
+      return dd + '_' + mm + '_' + yyyy;
+    }
+
+    function getDatesFromCurrentWeek() {
+      var dt = new Date();
+      var ret = [getFormattedDate(new Date(dt))];
+      while (dt.getDay() != 0) {
+        dt.setDate(dt.getDate() - 1);
+        formatted_date = getFormattedDate(new Date(dt))
+        //unshift adds to beginning, so dates are in ascending order
+        ret.unshift(formatted_date);
+      }
+      return ret;
+    }
+
+    function getWeekStreak(currentWeeksDates) {
+      var weekStreak = [];
+      // maybe we should save the entries in a dictionary instead of just the streak
+      for (i=0; i<currentWeeksDates.length; i++) {
+        var key = "rc_sp1_writingapp_" + currentWeeksDates[i];
+        var entry = localStorage.getItem(key);
+        if (entry) {
+          weekStreak.push(true);
+        } else {
+          weekStreak.push(false);
+        }
+      }
+      return weekStreak;
+    }
+
+    var currentEntry = retrieveFromLocalStorage(getFormattedDate(new Date()));
+    $('.entry-text').val(currentEntry);
+    console.log('currentEntry', currentEntry);
+
+    var currentWeeksDates = getDatesFromCurrentWeek();
+    console.log('getDatesFromCurrentWeek', currentWeeksDates);
+
+    var weekStreak = getWeekStreak(currentWeeksDates)
+    console.log('weeke strea: ', weekStreak);
+
+     updateWeekStreakWidget(weekStreak);
+
+    updateWordCountWidget();
+
+
+
 	});
+
 
     </script>
 
