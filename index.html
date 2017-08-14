@@ -111,23 +111,23 @@
       return dd + '_' + mm + '_' + yyyy;
     }
 
-    function getDatesFromCurrentWeek() {
+    function getDatesFromPastSevenDays() {
       var dt = new Date();
-      var ret = [getFormattedDate(new Date(dt))];
-      while (dt.getDay() != 0) {
-        dt.setDate(dt.getDate() - 1);
-        formatted_date = getFormattedDate(new Date(dt))
-        //unshift adds to beginning, so dates are in ascending order
-        ret.unshift(formatted_date);
+      var ret = [];
+     for (var i=0; i<7; i++) {
+          formatted_date = getFormattedDate(new Date(dt))
+          //unshift adds to beginning, so dates are in ascending order
+          ret.unshift(formatted_date);
+          dt.setDate(dt.getDate() - 1);
       }
       return ret;
     }
 
-    function getWeekStreak(currentWeeksDates) {
+    function getWeekStreak(streakDates) {
       var weekStreak = [];
       // maybe we should save the entries in a dictionary instead of just the streak
-      for (i=0; i<currentWeeksDates.length; i++) {
-        var key = "rc_sp1_writingapp_" + currentWeeksDates[i];
+      for (var i=0; i<streakDates.length; i++) {
+        var key = "rc_sp1_writingapp_" + streakDates[i];
         var entry = localStorage.getItem(key);
         if (entry) {
           weekStreak.push(true);
@@ -142,10 +142,10 @@
     $('.entry-text').val(currentEntry);
     console.log('currentEntry', currentEntry);
 
-    var currentWeeksDates = getDatesFromCurrentWeek();
-    console.log('getDatesFromCurrentWeek', currentWeeksDates);
+    var streakDates = getDatesFromPastSevenDays();
+    console.log('getDatesFromPastSevenDays', streakDates);
 
-    var weekStreak = getWeekStreak(currentWeeksDates)
+    var weekStreak = getWeekStreak(streakDates)
     console.log('weeke strea: ', weekStreak);
 
      updateWeekStreakWidget(weekStreak);
