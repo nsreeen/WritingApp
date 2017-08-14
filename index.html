@@ -7,43 +7,68 @@
     <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <style>
-      	.day-streak {
-	  background-color: yellow;
-	  width: 20px;
-	  border: 1px solid black;
-	  height: 20px;
-	  display: inline-block;
-	}
+        * {
+            color: #1A0423;
+        }
 
-	.complete {
+        .day-streak {
+            background-color: #BF8CD3;
+            width: 30px;
+            border: 2px solid #581F6E;
+            border-radius: 3px;
+            height: 30px;
+            display: inline-block;
+            margin: 1px;
+        }
 
-	}
+        .complete {
+            background-color: #581F6E;
+        }
 
-	.incomplete {
+        .container {
+            width: 60%;
+        }
 
-	}
+        textarea {
+            padding: 5px;
+        }
+
+        .entry-text {
+            background-color: #F9ECFE;
+            color: #581F6E;
+            border: 2px solid #581F6E;
+            border-radius: 3px;
+            width: 100%;
+            height: 70%;
+            border: 1px solid #;
+            margin: 0.5em auto;
+        }
+
+        body {
+            background-color: #BF8CD3;
+        }
     </style>
   </head>
 
   <body>
 
-
-
-	<h1>Writing app</h1>
-
 	<div class="container">
+
+	  <div class="row">
+          <h1>Write your thing!</h1>
+	  </div>
 
 	  <div class="row week-streak">
 	  </div>
 
 	  <div class="row">
-	    <textarea name="entry" class="entry-text" cols="30" rows="10">Lorem Ipsum.
+	    <textarea name="entry" class="entry-text" rows="25">Lorem Ipsum.
 	    </textarea>
 	  </div>
 
 	  <div class="row">
 	    <span class="word-count"></span>
-	    <span class="messages"></span>
+	    <span class="messages pull-right"></span>
 	  </div>
 
 	</div>
@@ -65,7 +90,7 @@
 	    var date = getFormattedDate(new Date());
 	    var entry = $('.entry-text').val();
 	    saveToLocalStorage(date, entry);
-	    $(".messages").html("Your entry has been saved").show().delay(1000).fadeOut("slow");
+	    $(".messages").html("Saved").show().delay(1000).fadeOut("slow");
       console.log('entry saved');
 	    console.log(localStorage.getItem(date)); // check it's there
 	  }
@@ -76,10 +101,10 @@
 		var updateWeekStreakWidget = function(data) {
 	    // map -> array of html elements
 	    var elements = data.map(function(complete) {
-	    	if (complete) {
-	      return '<span class="day-streak complete">X</span>'
+          if (complete) {
+                return '<span class="day-streak complete">&nbsp;</span>'
 	      } else {
-	      return '<span class="day-streak incomplete">_</span>'
+              return '<span class="day-streak incomplete">&nbsp;</span>'
 	      }
 	    })
 	     // clear and append array
