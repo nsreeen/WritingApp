@@ -48,13 +48,16 @@
         body {
             background-color: #BF8CD3;
         }
+        .old-entry-display {
+
+        }
     </style>
   </head>
 
   <body>
 
 	<div class="container">
-
+TESTING
 	  <div class="row">
           <h1>Write your thing!</h1>
 	  </div>
@@ -63,6 +66,7 @@
 	  </div>
 
 	  <div class="row">
+      <div class="old-entry-display"></div>
 	    <textarea name="entry" class="entry-text" rows="25">Lorem Ipsum.
 	    </textarea>
 	  </div>
@@ -114,6 +118,7 @@
               var cls = (entry.text) ? "complete" : "incomplete";
               var $html = $('<span class="day-streak ' + cls + '">&nbsp;</span>');
               $html.data('date', entry.date);
+              $html.data('isToday', entry.isToday);
               return $html;
           })
           // clear and append array
@@ -159,27 +164,18 @@
 
     function fetchRecentEntries(recentDates) {
       var recentEntries = [];
+      var today = getFormattedDate(new Date());
       for (var i=0; i<recentDates.length; i++) {
         var entry = retrieveFromLocalStorage(recentDates[i]);
-        recentEntries.push({text: entry, date: recentDates[i]});
+	      var isToday = (recentDates[i] == today);
+        recentEntries.push({text: entry, date: recentDates[i], isToday: isToday});
       }
       return recentEntries;
     }
 
-    var currentEntry = retrieveFromLocalStorage(getFormattedDate(new Date()));
-    $('.entry-text').val(currentEntry);
-
-    var recentDates = getDatesFromPastSevenDays();
-
-    var recentEntries = fetchRecentEntries(recentDates)
-    updateWeekStreakWidget(recentEntries);
-    console.log('recentEntries', recentEntries);
-
-    updateWordCountWidget();
-
     /*  have a div for previous entries
 	detect click on the weekstreak widget box
-	
+
 	if it's today's button:
 	 - hide div
 	 - show todays-ui (text area, saved, word count)
@@ -192,6 +188,40 @@
 	- hide todays-ui (text area, saved, word count)
 	- show the div
        */
+
+  function showOldEntry(weekStreakWidgetObject) {
+    var date = $(weekStreakWidgetObject).data('date');
+    // get entry from local storage
+    var entry = retrieveFromLocalStorage(date);
+    // set div text to entry
+    $('.old-entry-display').text(entry);
+    // show div - currently it is shown by default
+
+    // hide todays ui
+  }
+
+    var currentEntry = retrieveFromLocalStorage(getFormattedDate(new Date()));
+    $('.entry-text').val(currentEntry);
+
+    var recentDates = getDatesFromPastSevenDays();
+
+    var recentEntries = fetchRecentEntries(recentDates)
+    updateWeekStreakWidget(recentEntries);
+    console.log('recentEntries', recentEntries);
+
+    updateWordCountWidget();
+
+    $('.week-streak').on('click', function(event) {
+      if ( $(event.target).hasClass('day-streak') ) {
+        if ( $(event.target).data('isToday') ) {
+          showToday();
+        } else {
+          showOldEntry(event.target);
+        }
+      }
+    })
+
+
 
 
 	});
