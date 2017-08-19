@@ -97,6 +97,13 @@
 	  }
 
 	  setInterval(saveEntry, autosaveIntervalSeconds * 1000);
+	  // call saveEntry on Ctrl-S (https://stackoverflow.com/a/93836/149872)
+	  $(window).keypress(function(event) {
+	      if (!(event.which == 115 && event.ctrlKey) && !(event.which == 19)) return true;
+	      saveEntry();
+	      event.preventDefault();
+	      return false;
+	  });
 
 
 		var updateWeekStreakWidget = function(data) {
