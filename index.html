@@ -97,27 +97,28 @@
 	  }
 
 	  setInterval(saveEntry, autosaveIntervalSeconds * 1000);
-	  // call saveEntry on Ctrl-S (https://stackoverflow.com/a/93836/149872)
-	  $(window).keypress(function(event) {
-	      if (!(event.which == 115 && event.ctrlKey) && !(event.which == 19)) return true;
-	      saveEntry();
-	      event.preventDefault();
-	      return false;
-	  });
+	  // call saveEntry on Ctrl-S (https://stackoverflow.com/a/43966196)
+      $(document).keydown(function(e) {
+          if ((e.key == 's' || e.key == 'S' ) && (e.ctrlKey || e.metaKey)) {
+              e.preventDefault();
+              saveEntry();
+              return false;
+          }
+          return true;
+      });
 
 
-		var updateWeekStreakWidget = function(data) {
-	    // map -> array of html elements
-	    var elements = data.map(function(complete) {
-          if (complete) {
-                return '<span class="day-streak complete">&nbsp;</span>'
-	      } else {
-              return '<span class="day-streak incomplete">&nbsp;</span>'
-	      }
-	    })
-	     // clear and append array
-	  	$('.week-streak').html('').append(elements);
-	  }
+      var updateWeekStreakWidget = function(recentEntries) {
+          // map -> array of html elements
+          var elements = recentEntries.map(function(entry) {
+              var cls = (entry.text) ? "complete" : "incomplete";
+              var $html = $('<span class="day-streak ' + cls + '">&nbsp;</span>');
+              $html.data('date', entry.date);
+              return $html;
+          })
+          // clear and append array
+          $('.week-streak').html('').append(elements);
+      }
 
 	  function countwords(text) {
 	  	var words = text.split(/\s/).filter(function(word){
@@ -156,35 +157,41 @@
       return ret;
     }
 
-    function getWeekStreak(streakDates) {
-      var weekStreak = [];
-      // maybe we should save the entries in a dictionary instead of just the streak
-      for (var i=0; i<streakDates.length; i++) {
-        var key = "rc_sp1_writingapp_" + streakDates[i];
-        var entry = localStorage.getItem(key);
-        if (entry) {
-          weekStreak.push(true);
-        } else {
-          weekStreak.push(false);
-        }
+    function fetchRecentEntries(recentDates) {
+      var recentEntries = [];
+      for (var i=0; i<recentDates.length; i++) {
+        var entry = retrieveFromLocalStorage(recentDates[i]);
+        recentEntries.push({text: entry, date: recentDates[i]});
       }
-      return weekStreak;
+      return recentEntries;
     }
 
     var currentEntry = retrieveFromLocalStorage(getFormattedDate(new Date()));
     $('.entry-text').val(currentEntry);
-    console.log('currentEntry', currentEntry);
 
-    var streakDates = getDatesFromPastSevenDays();
-    console.log('getDatesFromPastSevenDays', streakDates);
+    var recentDates = getDatesFromPastSevenDays();
 
-    var weekStreak = getWeekStreak(streakDates)
-    console.log('weeke strea: ', weekStreak);
-
-     updateWeekStreakWidget(weekStreak);
+    var recentEntries = fetchRecentEntries(recentDates)
+    updateWeekStreakWidget(recentEntries);
+    console.log('recentEntries', recentEntries);
 
     updateWordCountWidget();
 
+    /*  have a div for previous entries
+	detect click on the weekstreak widget box
+	
+	if it's today's button:
+	 - hide div
+	 - show todays-ui (text area, saved, word count)
+	 - show we are back on today somehow?
+
+	if it's not today's button:
+	- find which day it is (use jquery data)
+	- get the entry for that day
+	- put entry into div
+	- hide todays-ui (text area, saved, word count)
+	- show the div
+       */
 
 
 	});
