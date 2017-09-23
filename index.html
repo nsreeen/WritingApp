@@ -196,6 +196,11 @@
   function showToday() {
     $('.today-ui').show();
     $('.old-entry-display').hide();
+    focusInput();
+  }
+
+  function focusInput() {
+    $('textarea').focus();
   }
 
     var currentEntry = retrieveFromLocalStorage(getFormattedDate(new Date()));
@@ -218,9 +223,7 @@
         }
       }
     })
-
-
-
+    focusInput();
 
 	});
 
